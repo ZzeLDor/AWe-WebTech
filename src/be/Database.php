@@ -16,9 +16,9 @@ class Database
      */
     public function __construct()
     {
-        $dbName = 'project1';
-        $dbUser = 'robert';
-        $dbPass = '12345';
+        $dbName = 'web';
+        $dbUser = 'web';
+        $dbPass = 'web';
 
         $this->connection = new PDO("mysql:host=localhost;dbname=$dbName", $dbUser, $dbPass);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

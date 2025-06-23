@@ -1,0 +1,280 @@
+openapi: 3.0.0
+info:
+  title: USA Fatal Accidents API
+  description: API for retrieving and managing fatal accidents data
+  version: 1.0.1
+
+servers:
+  - url: http://localhost/project1/api
+    description: Local development server
+
+paths:
+  /statistics:
+    get:
+      summary: Retrieve accident statistics
+      parameters:
+        - in: query
+          name: from_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: to_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Statistics data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accidents:
+                    type: integer
+                  casualties:
+                    type: integer
+                  avg_casualties:
+                    type: number
+
+  /mapdata:
+    get:
+      summary: Retrieve map data for heatmap or markers
+      parameters:
+        - in: query
+          name: from_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: to_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Map data points
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lng:
+                          type: number
+                        weight:
+                          type: number
+
+  /export:
+    get:
+      summary: Export data in requested format
+      parameters:
+        - in: query
+          name: from_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: to_year
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [csv, json, svg, webp]
+      responses:
+        '200':
+          description: Exported file
+          content:
+            application/octet-stream: {}
+
+  /admin:
+    get:
+      summary: List all accident records (filtered)
+      parameters:
+        - in: query
+          name: from_year
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: to_year
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccidentRecord'
+
+    post:
+      summary: Add a new accident record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccidentRecord'
+      responses:
+        '201':
+          description: Record created
+
+    put:
+      summary: Update an accident record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccidentRecord'
+      responses:
+        '200':
+          description: Record updated
+
+    delete:
+      summary: Delete an accident record
+      parameters:
+        - in: query
+          name: ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Record deleted
+
+components:
+  schemas:
+    AccidentRecord:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Source:
+          type: string
+        Severity:
+          type: integer
+        Start_Time:
+          type: string
+          format: date-time
+        End_Time:
+          type: string
+          format: date-time
+        Start_Lat:
+          type: number
+        Start_Lng:
+          type: number
+        End_Lat:
+          type: number
+        End_Lng:
+          type: number
+        Distance(mi):
+          type: number
+        Description:
+          type: string
+        Street:
+          type: string
+        City:
+          type: string
+        County:
+          type: string
+        State:
+          type: string
+        Zipcode:
+          type: string
+        Country:
+          type: string
+        Timezone:
+          type: string
+        Airport_Code:
+          type: string
+        Weather_Timestamp:
+          type: string
+          format: date-time
+        Temperature(F):
+          type: number
+        Wind_Chill(F):
+          type: number
+        Humidity(%):
+          type: number
+        Pressure(in):
+          type: number
+        Visibility(mi):
+          type: number
+        Wind_Direction:
+          type: string
+        Wind_Speed(mph):
+          type: number
+        Precipitation(in):
+          type: number
+        Weather_Condition:
+          type: string
+        Amenity:
+          type: boolean
+        Bump:
+          type: boolean
+        Crossing:
+          type: boolean
+        Give_Way:
+          type: boolean
+        Junction:
+          type: boolean
+        No_Exit:
+          type: boolean
+        Railway:
+          type: boolean
+        Roundabout:
+          type: boolean
+        Station:
+          type: boolean
+        Stop:
+          type: boolean
+        Traffic_Calming:
+          type: boolean
+        Traffic_Signal:
+          type: boolean
+        Turning_Loop:
+          type: boolean
+        Sunrise_Sunset:
+          type: string
+        Civil_Twilight:
+          type: string
+        Nautical_Twilight:
+          type: string
+        Astronomical_Twilight:
+          type: string
