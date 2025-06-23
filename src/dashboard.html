@@ -29,9 +29,56 @@
                 <label for="state">STATE</label>
                 <select id="state" name="state">
                     <option value="">All States</option>
-                    <option value="CA">California</option>
-                    <option value="TX">Texas</option>
-                    <option value="FL">Florida</option>
+                    <option value="Alabama">Alabama</option>
+                    <option value="Alaska">Alaska</option>
+                    <option value="Arizona">Arizona</option>
+                    <option value="Arkansas">Arkansas</option>
+                    <option value="California">California</option>
+                    <option value="Colorado">Colorado</option>
+                    <option value="Connecticut">Connecticut</option>
+                    <option value="Delaware">Delaware</option>
+                    <option value="Florida">Florida</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Hawaii">Hawaii</option>
+                    <option value="Idaho">Idaho</option>
+                    <option value="Illinois">Illinois</option>
+                    <option value="Indiana">Indiana</option>
+                    <option value="Iowa">Iowa</option>
+                    <option value="Kansas">Kansas</option>
+                    <option value="Kentucky">Kentucky</option>
+                    <option value="Louisiana">Louisiana</option>
+                    <option value="Maine">Maine</option>
+                    <option value="Maryland">Maryland</option>
+                    <option value="Massachusetts">Massachusetts</option>
+                    <option value="Michigan">Michigan</option>
+                    <option value="Minnesota">Minnesota</option>
+                    <option value="Mississippi">Mississippi</option>
+                    <option value="Missouri">Missouri</option>
+                    <option value="Montana">Montana</option>
+                    <option value="Nebraska">Nebraska</option>
+                    <option value="Nevada">Nevada</option>
+                    <option value="New Hampshire">New Hampshire</option>
+                    <option value="New Jersey">New Jersey</option>
+                    <option value="New Mexico">New Mexico</option>
+                    <option value="New York">New York</option>
+                    <option value="North Carolina">North Carolina</option>
+                    <option value="North Dakota">North Dakota</option>
+                    <option value="Ohio">Ohio</option>
+                    <option value="Oklahoma">Oklahoma</option>
+                    <option value="Oregon">Oregon</option>
+                    <option value="Pennsylvania">Pennsylvania</option>
+                    <option value="Rhode Island">Rhode Island</option>
+                    <option value="South Carolina">South Carolina</option>
+                    <option value="South Dakota">South Dakota</option>
+                    <option value="Tennessee">Tennessee</option>
+                    <option value="Texas">Texas</option>
+                    <option value="Utah">Utah</option>
+                    <option value="Vermont">Vermont</option>
+                    <option value="Virginia">Virginia</option>
+                    <option value="Washington">Washington</option>
+                    <option value="West Virginia">West Virginia</option>
+                    <option value="Wisconsin">Wisconsin</option>
+                    <option value="Wyoming">Wyoming</option>
                 </select>
             </div>
 
@@ -39,9 +86,16 @@
         </div>
     </form>
 
+    <div class="export-container">
+        <h2>Export Data</h2>
+        <button onclick="exportData('csv')" class="export-button">Export as CSV</button>
+        <button onclick="exportData('webp')" class="export-button">Export as WebP Image</button>
+    </div>
+
+    <!-- Updated stats container with 2 stat boxes -->
     <div class="stats-container">
         <div class="stat-box">
-            <h2>FATAL ACCIDENTS (TOTAL)</h2>
+            <h2> ACCIDENTS (TOTAL)</h2>
             <div class="stat-value" id="total-accidents">0</div>
             <div class="chart-container">
                 <canvas id="accidents-chart"></canvas>
@@ -49,18 +103,10 @@
         </div>
 
         <div class="stat-box">
-            <h2>CASUALTIES (TOTAL)</h2>
-            <div class="stat-value" id="total-casualties">0</div>
+            <h2>AVERAGE SEVERITY</h2>
+            <div class="stat-value" id="total-severity">0</div>
             <div class="chart-container">
-                <canvas id="casualties-chart"></canvas>
-            </div>
-        </div>
-
-        <div class="stat-box">
-            <h2>AVG CASUALTIES / ACCIDENT</h2>
-            <div class="stat-value" id="avg-casualties">0</div>
-            <div class="chart-container">
-                <canvas id="avg-casualties-chart"></canvas>
+                <canvas id="severity-chart"></canvas>
             </div>
         </div>
     </div>
@@ -71,78 +117,116 @@
     </div>
 </div>
 
-<script>
-    // Initialize form values
-    const today = new Date();
-    const thisYear = today.getFullYear();
-    const lastYear = thisYear - 1;
-    document.getElementById('from-year').value = lastYear;
-    document.getElementById('to-year').value = thisYear;
 
-    // Initialize map
+<script>
+    const ctxAccidents = document.getElementById('accidents-chart').getContext('2d');
+    const accidentsChart = new Chart(ctxAccidents, {
+        type: 'bar',
+        data: {
+            labels: ['Total Accidents'],
+            datasets: [{
+                label: 'Accidents',
+                data: [0],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    const ctxSeverity = document.getElementById('severity-chart').getContext('2d');
+    const severityChart = new Chart(ctxSeverity, {
+        type: 'bar',
+        data: {
+            labels: ['Average Severity'],
+            datasets: [{
+                label: 'Average Severity',
+                data: [0],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, max: 5 } }
+        }
+    });
+
     const map = L.map('map').setView([37.8, -96], 4);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
     }).addTo(map);
-    let markersGroup = L.layerGroup().addTo(map);
 
-    // Initialize charts
-    const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
-    const accidentsChart = new Chart(document.getElementById('accidents-chart'), {
-        type: 'bar', data: { labels: ['Accidents'], datasets: [{ data: [0], backgroundColor: 'rgba(54,162,235,0.5)' }] },
-        options: chartOptions
-    });
-    const casualtiesChart = new Chart(document.getElementById('casualties-chart'), {
-        type: 'bar', data: { labels: ['Casualties'], datasets: [{ data: [0], backgroundColor: 'rgba(255,99,132,0.5)' }] },
-        options: chartOptions
-    });
-    const avgCasualtiesChart = new Chart(document.getElementById('avg-casualties-chart'), {
-        type: 'bar', data: { labels: ['Avg Casualties'], datasets: [{ data: [0], backgroundColor: 'rgba(75,192,192,0.5)' }] },
-        options: chartOptions
-    });
+    const markersGroup = L.layerGroup().addTo(map);
 
-    // AJAX handler
     document.getElementById('filter-form').addEventListener('submit', function (e) {
         e.preventDefault();
+
+        const submitBtn = document.querySelector('.submit-button');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Loading...';
+
         const fromYear = document.getElementById('from-year').value;
         const toYear = document.getElementById('to-year').value;
         const state = document.getElementById('state').value;
 
-        // Get statistics
-        fetch(`../api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
+                if (data.error) {
+                    alert("Failed to load statistics: " + data.error);
+                    return;
+                }
+
                 document.getElementById('total-accidents').textContent = data.accidents;
-                document.getElementById('total-casualties').textContent = data.casualties;
-                document.getElementById('avg-casualties').textContent = data.avg_casualties.toFixed(2);
+                document.getElementById('total-severity').textContent = data.avg_casualties.toFixed(2);
 
                 accidentsChart.data.datasets[0].data = [data.accidents];
                 accidentsChart.update();
 
-                casualtiesChart.data.datasets[0].data = [data.casualties];
-                casualtiesChart.update();
-
-                avgCasualtiesChart.data.datasets[0].data = [data.avg_casualties];
-                avgCasualtiesChart.update();
+                severityChart.data.datasets[0].data = [data.avg_casualties];
+                severityChart.update();
+            })
+            .catch(err => {
+                alert("Failed to load statistics data");
+                console.error(err);
             });
 
-        // Get map data
-        fetch(`../api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
                 markersGroup.clearLayers();
-                const points = data.points.map(p => L.circle([p.lat, p.lng], {
-                    radius: p.weight * 1000,
+
+                const limitedPoints = data.points.slice(0, 500);
+                const points = limitedPoints.map(p => L.circle([p.lat, p.lng], {
+                    radius: (p.severity || 1) * 1000,
                     color: 'red',
                     fillOpacity: 0.5
                 }));
                 points.forEach(marker => marker.addTo(markersGroup));
+
                 if (points.length) {
                     const group = new L.featureGroup(points);
                     map.fitBounds(group.getBounds());
                 }
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
             });
     });
+
+    // Export function
+    function exportData(format) {
+        const fromYear = document.getElementById('from-year').value;
+        const toYear = document.getElementById('to-year').value;
+        const state = document.getElementById('state').value;
+
+        const url = `api/export.php?from_year=${fromYear}&to_year=${toYear}&state=${state}&format=${format}`;
+        window.open(url, '_blank');
+    }
 </script>
 </body>
 </html>
