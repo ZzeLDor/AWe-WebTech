@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>USA Fatal Accidents Insight</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA Accidents Insight</title>
+    <link rel="stylesheet" href="style.css?v=1" >
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
 </head>
 <body>
 <div class="dashboard-container">
@@ -19,130 +23,223 @@
         <div class="filters">
             <div class="date-range">
                 <label for="from-year">From year</label>
-                <input type="number" id="from-year" name="from-year" min="2010" max="2022" required>
+                <input type="number" id="from-year" name="from-year" min="2010" max="2022" value="2022" required>
                 <span>-</span>
                 <label for="to-year">To year</label>
-                <input type="number" id="to-year" name="to-year" min="2010" max="2022" required>
+                <input type="number" id="to-year" name="to-year" min="2010" max="2022" value="2022" required>
             </div>
 
             <div class="state-selector">
                 <label for="state">STATE</label>
                 <select id="state" name="state">
                     <option value="">All States</option>
+                    <option value="AL">Alabama</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
                     <option value="CA">California</option>
-                    <option value="TX">Texas</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
                     <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
                 </select>
             </div>
 
             <button type="submit" class="submit-button">Submit</button>
+
         </div>
     </form>
 
     <div class="stats-container">
         <div class="stat-box">
-            <h2>FATAL ACCIDENTS (TOTAL)</h2>
+            <h2>ACCIDENTS (TOTAL)</h2>
             <div class="stat-value" id="total-accidents">0</div>
             <div class="chart-container">
                 <canvas id="accidents-chart"></canvas>
             </div>
         </div>
-
         <div class="stat-box">
-            <h2>CASUALTIES (TOTAL)</h2>
-            <div class="stat-value" id="total-casualties">0</div>
-            <div class="chart-container">
-                <canvas id="casualties-chart"></canvas>
-            </div>
-        </div>
-
-        <div class="stat-box">
-            <h2>AVG CASUALTIES / ACCIDENT</h2>
-            <div class="stat-value" id="avg-casualties">0</div>
+            <h2>SEVERITY</h2>
+            <div class="stat-value" id="avg-casualties">0 | 0 | 0 | 0</div>
             <div class="chart-container">
                 <canvas id="avg-casualties-chart"></canvas>
             </div>
         </div>
+        <div class="stat-box">
+            <h2>TIME OF DAY</h2>
+            <div class="stat-value" id="time-of-day">☀️🌙</div>
+            <div class="chart-container">
+                <canvas id="time-of-day-chart"></canvas>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="map-container">
         <h2>MAP</h2>
         <div id="map"></div>
     </div>
+
+    <div class="export-container">
+        <button type="button" id="export-svg" class="submit-button">Export SVG image</button>
+        <button type="button" id="export-webp" class="submit-button">Export WEBP image</button>
+        <button type="button" id="export-csv" class="submit-button">Export CSV data</button>
+    </div>
+
 </div>
 
-<script>
-    // Initialize form values
-    const today = new Date();
-    const thisYear = today.getFullYear();
-    const lastYear = thisYear - 1;
-    document.getElementById('from-year').value = lastYear;
-    document.getElementById('to-year').value = thisYear;
 
-    // Initialize map
+
+<script>
+
     const map = L.map('map').setView([37.8, -96], 4);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    let markersGroup = L.layerGroup().addTo(map);
 
-    // Initialize charts
+    let markersGroup = L.markerClusterGroup();
+    map.addLayer(markersGroup);
+
     const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
     const accidentsChart = new Chart(document.getElementById('accidents-chart'), {
         type: 'bar', data: { labels: ['Accidents'], datasets: [{ data: [0], backgroundColor: 'rgba(54,162,235,0.5)' }] },
         options: chartOptions
     });
-    const casualtiesChart = new Chart(document.getElementById('casualties-chart'), {
-        type: 'bar', data: { labels: ['Casualties'], datasets: [{ data: [0], backgroundColor: 'rgba(255,99,132,0.5)' }] },
+    const todChart = new Chart(document.getElementById('time-of-day-chart'), {
+        type: 'bar', data: { labels: ['Day', 'Night'], datasets: [{ data: [0,0], backgroundColor: ['rgba(212,189,76,0.5)','rgba(40,101,255,0.5)'] }] },
         options: chartOptions
     });
     const avgCasualtiesChart = new Chart(document.getElementById('avg-casualties-chart'), {
-        type: 'bar', data: { labels: ['Avg Casualties'], datasets: [{ data: [0], backgroundColor: 'rgba(75,192,192,0.5)' }] },
+        type: 'bar', data: { labels: ['S1','S2', 'S3', 'S4'], datasets: [{ data: [0,0,0,0], backgroundColor: ['rgba(88,255,121,0.5)', "rgba(255,252,55,0.5)", "rgba(255,185,55,0.5)", "rgba(255,55,55,0.5)"] }] },
         options: chartOptions
     });
 
-    // AJAX handler
     document.getElementById('filter-form').addEventListener('submit', function (e) {
         e.preventDefault();
         const fromYear = document.getElementById('from-year').value;
         const toYear = document.getElementById('to-year').value;
         const state = document.getElementById('state').value;
 
-        // Get statistics
-        fetch(`../api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`../src/api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('total-accidents').textContent = data.accidents;
-                document.getElementById('total-casualties').textContent = data.casualties;
-                document.getElementById('avg-casualties').textContent = data.avg_casualties.toFixed(2);
+                // document.getElementById('time-of-day').textContent = `${data.tod} / ${data.tod2}`;
+                document.getElementById('avg-casualties').textContent = `${data.s1} | ${data.s2} | ${data.s3} | ${data.s4}`;
 
                 accidentsChart.data.datasets[0].data = [data.accidents];
                 accidentsChart.update();
 
-                casualtiesChart.data.datasets[0].data = [data.casualties];
-                casualtiesChart.update();
+                todChart.data.datasets[0].data[0] = [data.tod];
+                todChart.data.datasets[0].data[1] = [data.tod2];
+                todChart.update();
 
-                avgCasualtiesChart.data.datasets[0].data = [data.avg_casualties];
+                avgCasualtiesChart.data.datasets[0].data[0] = [data.s1];
+                avgCasualtiesChart.data.datasets[0].data[1] = [data.s2];
+                avgCasualtiesChart.data.datasets[0].data[2] = [data.s3];
+                avgCasualtiesChart.data.datasets[0].data[3] = [data.s4];
                 avgCasualtiesChart.update();
             });
 
-        // Get map data
-        fetch(`../api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`../src/api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
                 markersGroup.clearLayers();
-                const points = data.points.map(p => L.circle([p.lat, p.lng], {
-                    radius: p.weight * 1000,
-                    color: 'red',
-                    fillOpacity: 0.5
-                }));
-                points.forEach(marker => marker.addTo(markersGroup));
+                const points = data.points.map(p => {
+                    const marker = L.circleMarker([p.lat, p.lng], {
+                        radius: Math.min(p.weight * 3, 10),
+                        color: '#e14a72',
+                        fillOpacity: 0.6
+                    });
+                    marker.bindPopup(`<strong>Description:</strong> ${p.description} <br>
+                                      <strong>Date:</strong> ${p.time}`);
+                    return marker;
+                });
+                points.forEach(marker => markersGroup.addLayer(marker));
                 if (points.length) {
-                    const group = new L.featureGroup(points);
-                    map.fitBounds(group.getBounds());
+                    map.fitBounds(markersGroup.getBounds());
                 }
             });
     });
+    document.getElementById('export-csv').addEventListener('click', function () {
+        const fromYear = document.getElementById('from-year').value;
+        const toYear = document.getElementById('to-year').value;
+        const state = document.getElementById('state').value;
+
+        const url = `../src/api/exportcsv.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`;
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.click();
+    });
+    document.getElementById('export-webp').addEventListener('click', function () {
+        const fromYear = document.getElementById('from-year').value;
+        const toYear = document.getElementById('to-year').value;
+        const state = document.getElementById('state').value;
+
+        const url = `../src/api/exportwebp.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`;
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'accidents_report.webp';
+        link.click();
+    });
+    document.getElementById('export-svg').addEventListener('click', function () {
+        const fromYear = document.getElementById('from-year').value;
+        const toYear = document.getElementById('to-year').value;
+        const state = document.getElementById('state').value;
+
+        const url = `../src/api/exportsvg.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`;
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'accidents_report.svg';
+        link.click();
+    });
+
+
+
 </script>
 </body>
 </html>
