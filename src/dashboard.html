@@ -38,7 +38,11 @@
             <button type="submit" class="submit-button">Submit</button>
         </div>
     </form>
-
+    <div class="export-container">
+        <h2>Export Data</h2>
+        <button onclick="exportData('csv')">Export as CSV</button>
+        <button onclick="exportData('webp')">Export as WebP Image</button>
+    </div>
     <div class="stats-container">
         <div class="stat-box">
             <h2>FATAL ACCIDENTS (TOTAL)</h2>
@@ -109,7 +113,7 @@
         const state = document.getElementById('state').value;
 
         // Get statistics
-        fetch(`../api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`api/statistics.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('total-accidents').textContent = data.accidents;
@@ -127,7 +131,7 @@
             });
 
         // Get map data
-        fetch(`../api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
+        fetch(`api/mapdata.php?from_year=${fromYear}&to_year=${toYear}&state=${state}`)
             .then(res => res.json())
             .then(data => {
                 markersGroup.clearLayers();
@@ -143,6 +147,14 @@
                 }
             });
     });
+    function exportData(format) {
+        const fromYear = document.getElementById('from-year').value;
+        const toYear = document.getElementById('to-year').value;
+        const state = document.getElementById('state').value;
+
+        const url = `api/export.php?from_year=${fromYear}&to_year=${toYear}&state=${state}&format=${format}`;
+        window.open(url, '_blank');
+    }
 </script>
 </body>
 </html>
