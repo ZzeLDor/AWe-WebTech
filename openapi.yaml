@@ -1,0 +1,390 @@
+openapi: 3.0.0
+info:
+  title: USA Accidents API
+  description: API for managing and retrieving USA traffic accident data
+  version: 1.0.0
+
+paths:
+  /statistics.php:
+    get:
+      summary: Get accident statistics
+      description: Returns statistics about accidents including total count and severity breakdown
+      parameters:
+        - name: from_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2010
+          description: Starting year for data range
+        - name: to_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2022
+          description: Ending year for data range
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+          description: Two-letter state code (e.g., CA, NY)
+      responses:
+        '200':
+          description: Statistics data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accidents:
+                    type: integer
+                    description: Total number of accidents
+                  tod:
+                    type: integer
+                    description: Number of daytime accidents
+                  tod2:
+                    type: integer
+                    description: Number of nighttime accidents
+                  s1:
+                    type: integer
+                    description: Number of severity 1 accidents
+                  s2:
+                    type: integer
+                    description: Number of severity 2 accidents
+                  s3:
+                    type: integer
+                    description: Number of severity 3 accidents
+                  s4:
+                    type: integer
+                    description: Number of severity 4 accidents
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /mapdata.php:
+    get:
+      summary: Get map data points
+      description: Returns accident locations for map visualization (severity > 2 only)
+      parameters:
+        - name: from_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2010
+        - name: to_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2022
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+      responses:
+        '200':
+          description: Map data points
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: string
+                          description: Accident timestamp
+                        lat:
+                          type: number
+                          format: float
+                          description: Latitude coordinate
+                        lng:
+                          type: number
+                          format: float
+                          description: Longitude coordinate
+                        weight:
+                          type: integer
+                          description: Severity level (3 or 4)
+                        description:
+                          type: string
+                          description: Accident description
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin.php:
+    get:
+      summary: Add new accident record
+      description: Admin endpoint to add a new accident to the database
+      parameters:
+        - name: Start_Time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Accident date (YYYY-MM-DD format)
+        - name: Start_Lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Latitude coordinate
+        - name: Start_Lng
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Longitude coordinate
+        - name: Severity
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 4
+          description: Accident severity level
+        - name: Description
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Accident description
+        - name: State
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+          description: Two-letter state code
+      responses:
+        '200':
+          description: Accident added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      start_time:
+                        type: string
+                      start_lat:
+                        type: number
+                      start_lng:
+                        type: number
+                      severity:
+                        type: integer
+                      description:
+                        type: string
+                      state:
+                        type: string
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+
+  /exportcsv.php:
+    get:
+      summary: Export accident data as CSV
+      description: Downloads accident data in CSV format
+      parameters:
+        - name: from_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2010
+        - name: to_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2022
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+      responses:
+        '200':
+          description: CSV file download
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /exportsvg.php:
+    get:
+      summary: Export accident chart as SVG
+      description: Generates and downloads an SVG chart of accident severity data
+      parameters:
+        - name: from_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2010
+        - name: to_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2022
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+      responses:
+        '200':
+          description: SVG chart file
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /exportwebp.php:
+    get:
+      summary: Export accident chart as WebP image
+      description: Generates and downloads a WebP image chart of accident severity data
+      parameters:
+        - name: from_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2010
+        - name: to_year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 2010
+            maximum: 2022
+            default: 2022
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[A-Z]{2}$'
+      responses:
+        '200':
+          description: WebP image file
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+        - error
+
+  parameters:
+    YearParameter:
+      name: year
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 2010
+        maximum: 2022
+      description: Year filter for accident data
+
+    StateParameter:
+      name: state
+      in: query
+      required: false
+      schema:
+        type: string
+        pattern: '^[A-Z]{2}$'
+      description: Two-letter US state code
+
+tags:
+  - name: Statistics
+    description: Accident statistics endpoints
+  - name: Map Data
+    description: Geographic accident data for maps
+  - name: Admin
+    description: Administrative functions
+  - name: Export
+    description: Data export functionality
