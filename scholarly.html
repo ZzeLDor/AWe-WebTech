@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>System Requirements Specification - USA Accidents Insight</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: #5d6d7e;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .header-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 30px;
+        }
+
+        .requirement {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .requirement-id {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .priority-high {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>System Requirements Specification</h1>
+
+<div class="header-info">
+    <strong>Project:</strong> USA Accidents Insight - Web-based Accident Data Visualization Tool<br>
+    <strong>Date:</strong> 24th of June 2025<br>
+    <strong>Authors:</strong> Iordache George-Matei - Robert Zaharie
+</div>
+
+<h2>1. Introduction</h2>
+
+<h3>1.1 Purpose</h3>
+<p>This document specifies the functional and non-functional requirements for the USA Accidents Insight web application. The system is designed to provide flexible visualization and analysis of USA accident data for user-defined time periods, including statistical analysis, cartographic rendering, and data export capabilities.</p>
+
+<h3>1.2 Scope</h3>
+<p>The USA Accidents Insight system will enable users to:</p>
+<ul>
+    <li>Visualize accident data through multiple chart types and interactive maps</li>
+    <li>Filter data by time period (years) and geographical location (state)</li>
+    <li>Export data and visualizations in CSV, WebP, and SVG formats</li>
+    <li>Perform multi-criteria searches of reported incidents</li>
+    <li>Add new accident records through an administrative interface</li>
+</ul>
+
+<h3>1.3 Product Overview</h3>
+<p>The system consists of a web-based dashboard for data visualization and analysis, supported by a PHP backend connected to an Oracle database. The application provides real-time statistical calculations and interactive mapping capabilities using modern web technologies.</p>
+
+<h2>2. System Overview</h2>
+
+<h3>2.1 System Context</h3>
+<p>The USA Accidents Insight system operates as a standalone web application designed for academic and research purposes. It processes and visualizes historical accident data from the United States, providing insights through various statistical and geographical representations.</p>
+
+<h3>2.2 System Functions</h3>
+<ul>
+    <li>Data filtering and querying based on temporal and geographical criteria</li>
+    <li>Statistical analysis and visualization generation</li>
+    <li>Interactive map rendering with accident location markers</li>
+    <li>Data export in multiple formats</li>
+    <li>Administrative data management</li>
+</ul>
+
+<h2>3. Functional Requirements</h2>
+
+<h3>3.1 Data Visualization Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">FR-1: Dashboard Interface</div>
+    <p><strong>Description:</strong> The system shall provide a web-based dashboard displaying accident statistics and visualizations.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Inputs:</strong> User filter selections (year range, state)</p>
+    <p><strong>Outputs:</strong> Statistical charts, numerical summaries, interactive map</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">FR-2: Multiple Chart Types</div>
+    <p><strong>Description:</strong> The system shall generate at least three different types of visualizations: total accidents bar chart, severity distribution chart, and time-of-day distribution chart.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Acceptance Criteria:</strong> Charts update dynamically based on filter selections</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">FR-3: Interactive Mapping</div>
+    <p><strong>Description:</strong> The system shall display accident locations on an interactive map with severity-based markers.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Details:</strong> Map shall use marker clustering and display popup information for each accident</p>
+</div>
+
+<h3>3.2 Data Filtering Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">FR-4: Temporal Filtering</div>
+    <p><strong>Description:</strong> The system shall allow users to filter data by year range (2010-2022).</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Validation:</strong> Start year must not exceed end year</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">FR-5: Geographical Filtering</div>
+    <p><strong>Description:</strong> The system shall allow filtering by US state, including an "All States" option.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Implementation:</strong> Dropdown selection with all 50 US states</p>
+</div>
+
+<h3>3.3 Data Export Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">FR-6: CSV Export</div>
+    <p><strong>Description:</strong> The system shall export filtered accident data in CSV format.</p>
+    <p><strong>Priority:</strong> <span class="priority-medium">Medium</span></p>
+    <p><strong>Fields:</strong> All database fields including ID, location, severity, description, weather conditions, etc.</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">FR-7: Image Export</div>
+    <p><strong>Description:</strong> The system shall generate and export statistical charts in SVG and WebP formats.</p>
+    <p><strong>Priority:</strong> <span class="priority-medium">Medium</span></p>
+    <p><strong>Content:</strong> Severity distribution chart with current filter parameters</p>
+</div>
+
+<h3>3.4 Administrative Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">FR-8: Admin Interface</div>
+    <p><strong>Description:</strong> The system shall provide an administrative interface for adding new accident records.</p>
+    <p><strong>Priority:</strong> <span class="priority-medium">Medium</span></p>
+    <p><strong>Fields:</strong> Date, coordinates, severity, state, description</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">FR-9: Data Validation</div>
+    <p><strong>Description:</strong> The system shall validate all input data before database insertion.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Validation Rules:</strong> Date format, coordinate ranges, severity levels (1-4), valid state codes</p>
+</div>
+
+<h2>4. Non-Functional Requirements</h2>
+
+<h3>4.1 Performance Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-1: Response Time</div>
+    <p><strong>Description:</strong> The system shall respond to user filter requests within 3 seconds under normal load.</p>
+    <p><strong>Priority:</strong> <span class="priority-medium">Medium</span></p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-2: Data Processing</div>
+    <p><strong>Description:</strong> The system shall handle datasets with up to 100,000 accident records efficiently.</p>
+    <p><strong>Priority:</strong> <span class="priority-medium">Medium</span></p>
+</div>
+
+<h3>4.2 Usability Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-3: User Interface</div>
+    <p><strong>Description:</strong> The system shall provide an intuitive web interface requiring no special training.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+    <p><strong>Standards:</strong> Responsive design supporting desktop and tablet devices</p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-4: Accessibility</div>
+    <p><strong>Description:</strong> The system shall follow basic web accessibility guidelines.</p>
+    <p><strong>Priority:</strong> <span class="priority-low">Low</span></p>
+</div>
+
+<h3>4.3 Security Requirements</h3>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-5: Input Sanitization</div>
+    <p><strong>Description:</strong> The system shall sanitize all user inputs to prevent XSS and SQL injection attacks.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+</div>
+
+<div class="requirement">
+    <div class="requirement-id">NFR-6: Data Validation</div>
+    <p><strong>Description:</strong> The system shall validate all parameters server-side before database queries.</p>
+    <p><strong>Priority:</strong> <span class="priority-high">High</span></p>
+</div>
+
+<h2>5. User Interface Requirements</h2>
+
+<h3>5.1 Dashboard Interface</h3>
+<p>The main dashboard shall contain:</p>
+<ul>
+    <li>Filter controls (year range selectors, state dropdown, submit button)</li>
+    <li>Statistics display area with three main metric boxes</li>
+    <li>Chart visualization area below statistics</li>
+    <li>Interactive map section</li>
+    <li>Export buttons section</li>
+</ul>
+
+<h3>5.2 Administrative Interface</h3>
+<p>The admin panel shall provide:</p>
+<ul>
+    <li>Form fields for all required accident data</li>
+    <li>Input validation with error messaging</li>
+    <li>Success/failure feedback for data submission</li>
+    <li>Navigation back to main dashboard</li>
+</ul>
+
+<h2>6. System Architecture Requirements</h2>
+
+<h3>6.1 Technology Stack</h3>
+<table>
+    <tr>
+        <th>Component</th>
+        <th>Technology</th>
+        <th>Purpose</th>
+    </tr>
+    <tr>
+        <td>Frontend</td>
+        <td>HTML5, CSS3, JavaScript</td>
+        <td>User interface and client-side functionality</td>
+    </tr>
+    <tr>
+        <td>Backend</td>
+        <td>PHP</td>
+        <td>Server-side processing and database interaction</td>
+    </tr>
+    <tr>
+        <td>Database</td>
+        <td>Oracle Database</td>
+        <td>Data storage and retrieval</td>
+    </tr>
+    <tr>
+        <td>Mapping</td>
+        <td>Leaflet.js</td>
+        <td>Interactive map functionality</td>
+    </tr>
+    <tr>
+        <td>Charts</td>
+        <td>Chart.js</td>
+        <td>Statistical visualization</td>
+    </tr>
+</table>
+
+<h3>6.2 Database Requirements</h3>
+<p>The system shall use an Oracle database with the following key fields:</p>
+<ul>
+    <li>ID (Primary Key)</li>
+    <li>Start_Time (Date)</li>
+    <li>Start_Lat, Start_Lng (Coordinates)</li>
+    <li>Severity (1-4 scale)</li>
+    <li>State (2-letter code)</li>
+    <li>Description (Text)</li>
+    <li>Additional fields for comprehensive accident data</li>
+</ul>
+
+<h2>7. Constraints and Assumptions</h2>
+
+<h3>7.1 Constraints</h3>
+<ul>
+    <li>Data limited to years 2010-2022</li>
+    <li>Geographic scope limited to United States</li>
+    <li>Web browser compatibility required for modern browsers</li>
+    <li>Oracle database connectivity required</li>
+</ul>
+
+<h3>7.2 Assumptions</h3>
+<ul>
+    <li>Users have basic computer literacy and web browser access</li>
+    <li>Accident data is pre-loaded into the database</li>
+    <li>Server environment supports PHP and Oracle connectivity</li>
+    <li>Internet connection available for map tile loading</li>
+</ul>
+
+<h2>8. Acceptance Criteria</h2>
+
+<h3>8.1 Functional Acceptance</h3>
+<ul>
+    <li>All filtering operations produce accurate results</li>
+    <li>Charts update correctly based on filter selections</li>
+    <li>Map displays accident locations with appropriate markers</li>
+    <li>Export functions generate files in specified formats</li>
+    <li>Admin interface successfully adds new records</li>
+</ul>
+
+<h3>8.2 Performance Acceptance</h3>
+<ul>
+    <li>Dashboard loads within 5 seconds</li>
+    <li>Filter operations complete within 3 seconds</li>
+    <li>Map renders smoothly with up to 1000 markers</li>
+    <li>Export operations complete within 10 seconds</li>
+</ul>
+
+<h2>9. Future Enhancements</h2>
+<p>Potential future improvements may include:</p>
+<ul>
+    <li>User authentication and role-based access</li>
+    <li>Advanced filtering options (weather conditions, time of day)</li>
+    <li>Additional export formats (PDF, Excel)</li>
+    <li>Data visualization customization options</li>
+    <li>Mobile application development</li>
+    <li>Real-time data integration capabilities</li>
+</ul>
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>
