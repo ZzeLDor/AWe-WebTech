@@ -197,6 +197,19 @@ canvas {
 .submit-button:hover {
     background-color: #2a94d6;
 }
+.export-button{
+    padding: 10px 20px;
+    background-color: #36a2eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+
+}
 
 @media (max-width: 992px) {
     .stats-container {
