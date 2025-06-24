@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USA Accidents Insight</title>
-    <link rel="stylesheet" href="style.css?v=1" >
+    <link rel="stylesheet" href="style.css?v=1">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css">
@@ -16,9 +16,12 @@
 <body>
 <div class="dashboard-container">
     <header>
-        <h1>USA FATAL ACCIDENTS INSIGHT</h1>
+        <h1>USA ACCIDENTS INSIGHT</h1>
     </header>
-    <button type="button" id="admin-login" class="submit-button">Admin</button>
+    <div class = "export-container">
+        <button type="button" id="admin-login" class="submit-button">Admin</button>
+        <button onclick="window.location.href='scholarly.html'" class="export-button"> Scholarly </button>
+    </div>
 
     <form id="filter-form">
         <div class="filters">
@@ -120,12 +123,7 @@
         <h2>MAP</h2>
         <div id="map"></div>
     </div>
-    <div class="redirect-container">
-        <h2>Overview</h2>
-        <button onclick="window.location.href='scholarly.html'" class="export-button">
-            Scholarly
-        </button>
-    </div>
+
     <div class="export-container">
         <button type="button" id="export-svg" class="export-button">Export SVG image</button>
         <button type="button" id="export-webp" class="export-button">Export WEBP image</button>
@@ -150,7 +148,7 @@
             '/': '&#x2F;'
         };
 
-        return text.replace(/[&<>"'\/]/g, function(s) {
+        return text.replace(/[&<>"'\/]/g, function (s) {
             return map[s];
         });
     }
@@ -216,17 +214,28 @@
     let markersGroup = L.markerClusterGroup();
     map.addLayer(markersGroup);
 
-    const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+    const chartOptions = {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}};
     const accidentsChart = new Chart(document.getElementById('accidents-chart'), {
-        type: 'bar', data: { labels: ['Accidents'], datasets: [{ data: [0], backgroundColor: 'rgba(54,162,235,0.5)' }] },
+        type: 'bar', data: {labels: ['Accidents'], datasets: [{data: [0], backgroundColor: 'rgba(54,162,235,0.5)'}]},
         options: chartOptions
     });
     const todChart = new Chart(document.getElementById('time-of-day-chart'), {
-        type: 'bar', data: { labels: ['Day', 'Night'], datasets: [{ data: [0,0], backgroundColor: ['rgba(212,189,76,0.5)','rgba(40,101,255,0.5)'] }] },
+        type: 'bar',
+        data: {
+            labels: ['Day', 'Night'],
+            datasets: [{data: [0, 0], backgroundColor: ['rgba(212,189,76,0.5)', 'rgba(40,101,255,0.5)']}]
+        },
         options: chartOptions
     });
     const avgCasualtiesChart = new Chart(document.getElementById('avg-casualties-chart'), {
-        type: 'bar', data: { labels: ['S1','S2', 'S3', 'S4'], datasets: [{ data: [0,0,0,0], backgroundColor: ['rgba(88,255,121,0.5)', "rgba(255,252,55,0.5)", "rgba(255,185,55,0.5)", "rgba(255,55,55,0.5)"] }] },
+        type: 'bar',
+        data: {
+            labels: ['S1', 'S2', 'S3', 'S4'],
+            datasets: [{
+                data: [0, 0, 0, 0],
+                backgroundColor: ['rgba(88,255,121,0.5)', "rgba(255,252,55,0.5)", "rgba(255,185,55,0.5)", "rgba(255,55,55,0.5)"]
+            }]
+        },
         options: chartOptions
     });
 
@@ -392,7 +401,7 @@
         link.click();
     });
 
-    document.getElementById('admin-login').addEventListener('click', function() {
+    document.getElementById('admin-login').addEventListener('click', function () {
         window.location.href = 'admin.html';
     });
 

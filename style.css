@@ -106,7 +106,7 @@ header h1 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    min-width: 0; /* Prevents flex items from overflowing */
+    min-width: 0;
 }
 
 .stat-box h2 {
@@ -142,8 +142,8 @@ header h1 {
 }
 
 .export-container button {
-    flex: 1;           /* fiecare buton ia o parte egală din spațiul disponibil */
-    min-width: 120px;  /* opțional: lățime minimă ca să nu fie prea îngust */
+    flex: 1;
+    min-width: 120px;
 }
 
 .map-container {
@@ -197,6 +197,7 @@ canvas {
 .submit-button:hover {
     background-color: #2a94d6;
 }
+
 .export-button{
     padding: 10px 20px;
     background-color: #36a2eb;
@@ -208,7 +209,10 @@ canvas {
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
+}
 
+.submit-button:hover {
+    background-color: #2a94d6;
 }
 
 @media (max-width: 992px) {
